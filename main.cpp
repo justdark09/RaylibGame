@@ -48,6 +48,9 @@ int main()
     const float runMultiplier = 1.25;
     const float crouchMultiplier = .7;
 
+    const float runSpeed = 5 * 1.25 * GetFrameTime();
+    const float crouchWalkSpeed = 5 * 0.7 * GetFrameTime();
+
     float timer = 0.0f;
     int frame = 0;
 
@@ -110,7 +113,7 @@ int main()
 
             if (IsKeyDown(KEY_S)) {
                 frameTime = .12f;
-                spriteX += 5 * crouchMultiplier;
+                spriteX += crouchWalkSpeed;
                 current_struct = crouch_walk_struct;
             } else if (IsKeyDown(KEY_LEFT_SHIFT)) {
                 current_struct = run_struct;
@@ -127,11 +130,11 @@ int main()
 
             if (IsKeyDown(KEY_S)) {
                 frameTime = .12f;
-                spriteX -= 5 * crouchMultiplier;
+                spriteX -= crouchWalkSpeed;
                 current_struct = crouch_walk_struct;
             } else if (IsKeyDown(KEY_LEFT_SHIFT)) {
                 current_struct = run_struct;
-                spriteX -= 5 * runMultiplier;
+                spriteX -= runSpeed;
                 frameTime = .08f;
             } else {
                 spriteX -= 300 * GetFrameTime();
@@ -145,7 +148,7 @@ int main()
         } else {
             current_struct = idle_struct;
             frameTime = .12f;
-            spriteY -= 5;
+            spriteY = 300;
         }
 
         if (spriteX > SCREEN_WIDTH) {
@@ -177,8 +180,9 @@ int main()
             //  *
             //  * - edit the if, if-else, else tree so KEY_D does not have priority
             //  * over KEY_A. kind of a mix of IsKeyDown(int key) and GetKeyPressed(void)
-            //                                      ^^^  found in rcore.c  ^^^
-            //  * -
+            //  *                                   ^^^  found in rcore.c  ^^^
+            //  * - as of 12.7.24 @ 4:42 pm, I think the bounds-checking is still as if
+            //  * the origin of the sprite was the top left of it
 
 
         EndDrawing();
