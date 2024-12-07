@@ -15,7 +15,7 @@ int main()
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Knight Game");
     SetTargetFPS(60);
 
-    Texture2D knightSheet = LoadTexture("C:/Users/darkp/CLionProjects/RaylibGame/assets/sprites/knight_sheet.png");
+    Texture2D knightSheet = LoadTexture("assets/sprites/knight_sheet.png");
     const float frameHeight = static_cast<float>(knightSheet.height)/30;
     const float frameWidth = static_cast<float>(knightSheet.width)/12;
     const float flippedFrame = -frameWidth;
