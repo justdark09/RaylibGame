@@ -27,7 +27,11 @@ endif()
 
 add_executable(${PROJECT_NAME} main.cpp
         knight.cpp
-        knight.h)
+        knight.h
+        entity.cpp
+        entity.h
+        handleInput.cpp
+        handleInput.h)
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib)
 

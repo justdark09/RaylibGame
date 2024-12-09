@@ -1,6 +1,8 @@
 #include <iostream>
 #include "raylib.h"
 
+#include "knight.h"
+
 #define SCREEN_WIDTH 1600
 #define SCREEN_HEIGHT 900
 
@@ -12,6 +14,8 @@ int printThanks()
 
 int main()
 {
+    knight Knight;
+
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Knight Game");
     SetTargetFPS(60);
 
@@ -31,8 +35,7 @@ int main()
         int maxFrames;
     };
 
-    // make structs to hold each animation's values.
-    // (i.e. where to get the src rectangle from, the max amount of frames that animation has, etc.)
+
     AnimationStruct attack1_struct{};
     AnimationStruct attack2_struct{};
     AnimationStruct run_struct{};
@@ -44,12 +47,7 @@ int main()
     // placeholder struct so the textures can be changed
     AnimationStruct current_struct{};
 
-    // declare and initialize variables used within the while loop in order to keep the code clean
-    const float runMultiplier = 1.25;
-    const float crouchMultiplier = .7;
 
-    const float runSpeed = 5 * 1.25 * GetFrameTime();
-    const float crouchWalkSpeed = 5 * 0.7 * GetFrameTime();
 
     float timer = 0.0f;
     int frame = 0;
@@ -85,7 +83,7 @@ int main()
         idle_struct.animationHeight = frameHeight * 16.f;
 
         attack2_struct.maxFrames = 5;
-        attack2_struct.animationHeight = static_cast<float>(frameHeight) * 2.f;
+        attack2_struct.animationHeight = frameHeight * 2.f;
 
         attack1_struct.maxFrames = 3;
         attack1_struct.animationHeight = frameHeight;
@@ -102,9 +100,12 @@ int main()
         jump_struct.maxFrames = 2;
         jump_struct.animationHeight = frameHeight * 15;
 
+        float runSpeed = 500 * 1.25 * GetFrameTime();
+        float crouchWalkSpeed = 300 * 0.7 * GetFrameTime();
 
         if (IsKeyPressed(KEY_W)) {
-            velocityY = -300;
+
+            velocityY = -500;
             current_struct = jump_struct;
 
         } else if (IsKeyDown(KEY_D)) {
@@ -117,7 +118,7 @@ int main()
                 current_struct = crouch_walk_struct;
             } else if (IsKeyDown(KEY_LEFT_SHIFT)) {
                 current_struct = run_struct;
-                spriteX += 5 * runMultiplier;
+                spriteX += runSpeed;
                 frameTime = .08f;
             } else {
                 spriteX += 300 * GetFrameTime();
@@ -163,9 +164,10 @@ int main()
         }
 
 
-
+        /*
 
         frame = frame % current_struct.maxFrames;
+
         DrawTexturePro(
             knightSheet,
             Rectangle{ frameWidth*frame, current_struct.animationHeight, currentFrame, frameHeight },
@@ -173,6 +175,10 @@ int main()
             spriteCenter,
             0.f,
             WHITE);
+
+         */
+
+        Knight.drawKnight();
 
             // todo:
             //  * - spriteX and spriteY do not work with SCREEN_HEIGHT or SCREEN_WIDTH
