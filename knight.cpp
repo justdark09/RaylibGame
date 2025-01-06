@@ -3,12 +3,14 @@
 #define SCREEN_HEIGHT 900
 #define SCREEN_WIDTH 1600
 
-knight::knight()
+knight::knight(): gravity(0)
 {
     knightSheet = LoadTexture("assets/sprites/knight_sheet.png");
 
     frameHeight = static_cast<float>(knightSheet.height) / 30;
     frameWidth = static_cast<float>(knightSheet.width) / 12;
+
+    currentFrame = frameWidth;
 
     // initialize the animation structs
     // !! maxFrames should equal the number of frames the animation has MINUS ONE !!
@@ -32,16 +34,52 @@ knight::knight()
 
     jump_struct.maxFrames = 2;
     jump_struct.animationHeight = frameHeight * 15;
+
+    // starting animation struct
+    current_struct = idle_struct;
+
+    crouchSpeed = 300 * 0.7f * GetFrameTime();
+    runSpeed = 500 * 1.25f * GetFrameTime();
+    jumpPower = 200.f;
+
+    currentSpeed = 0.f;
+
+    spriteX = 0;
+    spriteY = 0;
+
+    velocityX = 0;
+    velocityY = 0 - gravity;
 }
+
+void knight::moveLeft()
+{
+    spriteX -= currentSpeed;
+}
+void knight::moveRight()
+{
+    spriteX += currentSpeed;
+}
+void knight::jump()
+{
+    spriteY -= velocityY;
+}
+
 
 
 
 
 void knight::drawKnight()
 {
-    int knightFrame;
+    if (IsKeyPressed(KEY_W)) {
+        jump();
+    }
+
+
+    int knightFrame = 0;
     knightFrame = trackFrames();
     knightFrame = knightFrame % current_struct.maxFrames;
+
+    timer += GetFrameTime();
 
     if (spriteX > SCREEN_WIDTH) {
         spriteX = 0 - frameWidth*2;
@@ -52,7 +90,7 @@ void knight::drawKnight()
 
     DrawTexturePro(
         knightSheet,
-        Rectangle{ frameWidth*knightFrame, current_struct.animationHeight, currentFrame, frameHeight },
+        Rectangle{ frameWidth * knightFrame, current_struct.animationHeight, currentFrame, frameHeight },
         Rectangle{ spriteX, spriteY, frameWidth*5, frameHeight*5 },
         spriteCenter,
         0.f,

@@ -9,14 +9,34 @@ public:
     knight();
     void drawKnight();
 
+    void moveRight();
+    void moveLeft();
+    void jump();
+
+
+
 private:
     float frameHeight;
     float frameWidth;
-
     float currentFrame;
 
-    float spriteX = 0;
-    float spriteY = 0;
+    float spriteX;
+    float spriteY;
+
+    float velocityX;
+    float velocityY;
+
+    const float gravity;
+
+    float crouchSpeed;
+    float runSpeed;
+    float jumpPower;
+
+    float currentSpeed;
+
+    // reset any velocity to default values
+    void resetVelocity();
+
 
     Texture2D knightSheet{};
 
