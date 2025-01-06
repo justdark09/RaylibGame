@@ -3,7 +3,7 @@
 #define SCREEN_HEIGHT 900
 #define SCREEN_WIDTH 1600
 
-knight::knight(): gravity(0)
+knight::knight(): gravity(125)
 {
     knightSheet = LoadTexture("assets/sprites/knight_sheet.png");
 
@@ -45,23 +45,26 @@ knight::knight(): gravity(0)
     currentSpeed = 0.f;
 
     spriteX = 0;
-    spriteY = 0;
+    spriteY = 300;
 
     velocityX = 0;
-    velocityY = 0 - gravity;
+    velocityY = 0;
+
 }
 
-void knight::moveLeft()
+void knight::moveLeft(float speed)
 {
-    spriteX -= currentSpeed;
+    current_struct = run_struct;
+    spriteX -= speed;
 }
-void knight::moveRight()
+void knight::moveRight(float speed)
 {
-    spriteX += currentSpeed;
+    current_struct = run_struct;
+    spriteX += speed;
 }
 void knight::jump()
 {
-    spriteY -= velocityY;
+    velocityY = -30;
 }
 
 
@@ -70,8 +73,33 @@ void knight::jump()
 
 void knight::drawKnight()
 {
+    spriteY += velocityY;
+
+    if (spriteX > SCREEN_WIDTH) {
+        spriteX = 0 - frameWidth*2;
+    }
+    if (spriteX < 0 - frameWidth*2.5) {
+        spriteX = SCREEN_WIDTH;
+    }
+
+    if (spriteY >= 300) {
+        spriteY = 300;
+    }
+
+
+    velocityY += GetFrameTime() * gravity;
+    spriteY += GetFrameTime() * velocityY;
+
+
+
     if (IsKeyPressed(KEY_W)) {
         jump();
+    } else if (IsKeyDown(KEY_A)) {
+        currentSpeed = 7;
+        moveLeft(currentSpeed);
+    } else if (IsKeyDown(KEY_D)) {
+        currentSpeed = 7;
+        moveRight(currentSpeed);
     }
 
 

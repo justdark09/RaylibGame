@@ -9,8 +9,8 @@ public:
     knight();
     void drawKnight();
 
-    void moveRight();
-    void moveLeft();
+    void moveRight(float);
+    void moveLeft(float);
     void jump();
 
 
