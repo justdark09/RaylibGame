@@ -1,7 +1,5 @@
 #include "knight.h"
 
-#include<iostream>
-
 #define SCREEN_HEIGHT 900
 #define SCREEN_WIDTH 1600
 
@@ -13,6 +11,8 @@ knight::knight()
     frameWidth = static_cast<float>(knightSheet.width) / 12;
 
     currentFrame = frameWidth;
+    isFlipped = false;
+
 
     // initialize the animation structs
     // !! maxFrames should equal the number of frames the animation has MINUS ONE !!
@@ -50,13 +50,20 @@ knight::knight()
     spriteY = 300;
 
     velocityY = 0;
-    gravity = 5000;
+    gravity = 1500;
+
+    isGrounded = false;
 
 }
 
+void knight::unload() const
+{
+    UnloadTexture(knightSheet);
+}
+
+
 void knight::resetVelAndAnim()
 {
-    velocityX = 0;
     velocityY = 0;
 
     current_struct = idle_struct;
@@ -78,48 +85,54 @@ void knight::jump()
     velocityY = -300;
 }
 
-
-
-
-
 void knight::drawKnight()
 {
     velocityY += GetFrameTime() * gravity;
     spriteY += GetFrameTime() * velocityY;
 
-    if (spriteX > SCREEN_WIDTH) {
-        spriteX = 0 - frameWidth*2;
+    if (spriteX > SCREEN_WIDTH - 50) {
+        spriteX = -300;
     }
-    if (spriteX < 0 - frameWidth*2.5) {
-        spriteX = SCREEN_WIDTH;
+    if (spriteX < -300) {
+        spriteX = SCREEN_WIDTH - 50;
     }
 
     if (spriteY >= 300) {
         spriteY = 300;
     }
-
-    if (IsKeyPressed(KEY_W)) {
-        current_struct = jump_struct;
-        velocityY = -300;
-    } else if (IsKeyDown(KEY_A)) {
-        currentSpeed = 7;
-        moveLeft(currentSpeed);
-    } else if (IsKeyDown(KEY_D)) {
-        currentSpeed = 7;
-        moveRight(currentSpeed);
+    if (spriteY == 300) {
+        isGrounded = true;
     } else {
-        resetVelAndAnim();
-        velocityY += gravity;
+        isGrounded = false;
     }
 
 
-    int knightFrame = 0;
-    knightFrame = trackFrames();
+
+    if (IsKeyPressed(KEY_W) && isGrounded) {
+        current_struct = jump_struct;
+        velocityY = -1000;
+    } else if (IsKeyDown(KEY_A)) {
+        currentSpeed = 7;
+        isFlipped = true;
+        moveLeft(currentSpeed);
+    } else if (IsKeyDown(KEY_D)) {
+        currentSpeed = 7;
+        isFlipped = false;
+        moveRight(currentSpeed);
+    } else {
+        current_struct = idle_struct;
+    }
+
+    if (isFlipped) {
+        currentFrame = -frameWidth;
+    } else {
+        currentFrame = frameWidth;
+    }
+
+    int knightFrame = trackFrames();
     knightFrame = knightFrame % current_struct.maxFrames;
 
     timer += GetFrameTime();
-
-    std::cout<<GetFrameTime()<<std::endl;
 
     DrawTexturePro(
         knightSheet,
@@ -127,5 +140,6 @@ void knight::drawKnight()
         Rectangle{ spriteX, spriteY, frameWidth*5, frameHeight*5 },
         spriteCenter,
         0.f,
-        WHITE);
+        WHITE
+    );
 }

@@ -13,7 +13,8 @@ public:
     void moveLeft(float);
     void jump();
 
-
+    // unload everything (Textures, Sounds, etc)
+    void unload() const;
 
 private:
     float frameHeight;
@@ -23,7 +24,6 @@ private:
     float spriteX;
     float spriteY;
 
-    float velocityX;
     float velocityY;
 
     float gravity;
@@ -36,6 +36,10 @@ private:
 
     // resets velocity and animation to default values
     void resetVelAndAnim();
+
+    bool isGrounded;
+
+    bool isFlipped;
 
 
     Texture2D knightSheet{};
