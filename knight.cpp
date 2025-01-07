@@ -1,9 +1,11 @@
 #include "knight.h"
 
+#include<iostream>
+
 #define SCREEN_HEIGHT 900
 #define SCREEN_WIDTH 1600
 
-knight::knight(): gravity(125)
+knight::knight()
 {
     knightSheet = LoadTexture("assets/sprites/knight_sheet.png");
 
@@ -40,16 +42,24 @@ knight::knight(): gravity(125)
 
     crouchSpeed = 300 * 0.7f * GetFrameTime();
     runSpeed = 500 * 1.25f * GetFrameTime();
-    jumpPower = 200.f;
+    jumpPower = 250.f;
 
     currentSpeed = 0.f;
 
     spriteX = 0;
     spriteY = 300;
 
+    velocityY = 0;
+    gravity = 5000;
+
+}
+
+void knight::resetVelAndAnim()
+{
     velocityX = 0;
     velocityY = 0;
 
+    current_struct = idle_struct;
 }
 
 void knight::moveLeft(float speed)
@@ -64,7 +74,8 @@ void knight::moveRight(float speed)
 }
 void knight::jump()
 {
-    velocityY = -30;
+    current_struct = jump_struct;
+    velocityY = -300;
 }
 
 
@@ -73,7 +84,8 @@ void knight::jump()
 
 void knight::drawKnight()
 {
-    spriteY += velocityY;
+    velocityY += GetFrameTime() * gravity;
+    spriteY += GetFrameTime() * velocityY;
 
     if (spriteX > SCREEN_WIDTH) {
         spriteX = 0 - frameWidth*2;
@@ -86,20 +98,18 @@ void knight::drawKnight()
         spriteY = 300;
     }
 
-
-    velocityY += GetFrameTime() * gravity;
-    spriteY += GetFrameTime() * velocityY;
-
-
-
     if (IsKeyPressed(KEY_W)) {
-        jump();
+        current_struct = jump_struct;
+        velocityY = -300;
     } else if (IsKeyDown(KEY_A)) {
         currentSpeed = 7;
         moveLeft(currentSpeed);
     } else if (IsKeyDown(KEY_D)) {
         currentSpeed = 7;
         moveRight(currentSpeed);
+    } else {
+        resetVelAndAnim();
+        velocityY += gravity;
     }
 
 
@@ -109,12 +119,7 @@ void knight::drawKnight()
 
     timer += GetFrameTime();
 
-    if (spriteX > SCREEN_WIDTH) {
-        spriteX = 0 - frameWidth*2;
-    }
-    if (spriteX < 0 - frameWidth*2.5) {
-        spriteX = SCREEN_WIDTH;
-    }
+    std::cout<<GetFrameTime()<<std::endl;
 
     DrawTexturePro(
         knightSheet,

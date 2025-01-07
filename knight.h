@@ -26,7 +26,7 @@ private:
     float velocityX;
     float velocityY;
 
-    const float gravity;
+    float gravity;
 
     float crouchSpeed;
     float runSpeed;
@@ -34,8 +34,8 @@ private:
 
     float currentSpeed;
 
-    // reset any velocity to default values
-    void resetVelocity();
+    // resets velocity and animation to default values
+    void resetVelAndAnim();
 
 
     Texture2D knightSheet{};

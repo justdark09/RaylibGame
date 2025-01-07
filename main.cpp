@@ -54,6 +54,6 @@ int main()
         EndDrawing();
 
     }
-    printThanks();
+    //printThanks();
     return 0;
 }
